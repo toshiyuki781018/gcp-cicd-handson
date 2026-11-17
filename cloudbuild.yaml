@@ -1,0 +1,35 @@
+steps:
+  # 1. コンテナイメージのビルド
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$BUILD_ID'
+      - '.'
+
+  # 2. Artifact Registryへ保存
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$BUILD_ID'
+
+  # 3. Cloud Runへデプロイ
+  - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:stable'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$BUILD_ID'
+      - '--region=${_REGION}'
+      - '--project=$PROJECT_ID'
+      - '--quiet'
+
+substitutions:
+  _REGION: 'asia-northeast1'
+  _REPOSITORY: 'cicd-repo'
+  _IMAGE: 'hello-app'
+  _SERVICE: 'cicd-hello'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
