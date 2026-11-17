@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello from Google Cloud CI/CD!"
+    return "CI/CD Auto Deploy Success! Student01"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
