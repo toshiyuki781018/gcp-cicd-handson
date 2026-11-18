@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "CI/CD Auto Deploy Success! Student○○"
+    return "CI/CD Auto Deploy Success! lecture"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
